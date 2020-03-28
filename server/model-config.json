@@ -1,0 +1,54 @@
+{
+    "_meta": {
+        "sources": [
+            "loopback/common/models",
+            "loopback/server/models",
+            "../common/models",
+            "./models"
+        ],
+        "mixins": [
+            "loopback/common/mixins",
+            "loopback/server/mixins",
+            "../common/mixins",
+            "./mixins"
+        ]
+    },
+    "User": {
+        "dataSource": "covid-tracker"
+    },
+    "AccessToken": {
+        "dataSource": "covid-tracker",
+        "public": false
+    },
+    "ACL": {
+        "dataSource": "covid-tracker",
+        "public": false
+    },
+    "RoleMapping": {
+        "dataSource": "covid-tracker",
+        "public": false,
+        "options": {
+            "strictObjectIDCoercion": true
+        }
+    },
+    "Role": {
+        "dataSource": "covid-tracker",
+        "public": false
+    },
+    "Person": {
+        "dataSource": "covid-tracker",
+        "public": true
+    },
+    "TimeSlot": {
+        "dataSource": "covid-tracker",
+        "public": true
+    },
+    "Location": {
+        "dataSource": "covid-tracker",
+        "public": true
+    },
+    "Ledger": {
+        "dataSource": "covid-tracker",
+        "public": true
+    }
+}

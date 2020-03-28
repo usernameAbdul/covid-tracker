@@ -1,0 +1,17 @@
+{
+    "db": {
+        "name": "db",
+        "connector": "memory"
+    },
+    "covid-tracker": {
+        "host": "localhost",
+        "port": 27017,
+        "url": "",
+        "database": "covid-tracker",
+        "password": "",
+        "name": "covid-tracker",
+        "user": "",
+        "useNewUrlParser": true,
+        "connector": "mongodb"
+    }
+}
