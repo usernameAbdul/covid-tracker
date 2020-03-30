@@ -4,13 +4,13 @@
         "connector": "memory"
     },
     "covid-tracker": {
-        "host": "localhost",
+        "host": "",
         "port": 27017,
-        "url": "",
+        "url": "mongodb+srv://covid-tracker-db-user:Newyork2020!@cluster0-su83o.mongodb.net/test?retryWrites=true&w=majority",
         "database": "covid-tracker",
-        "password": "",
+        "password": "Newyork2020!",
         "name": "covid-tracker",
-        "user": "",
+        "user": "covid-tracker-db-user",
         "useNewUrlParser": true,
         "connector": "mongodb"
     }
