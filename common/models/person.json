@@ -15,12 +15,41 @@
             "required": true
         },
         "location": {
-            "type": "object",
-            "required": true
+            "type": [{
+                "lat": "number",
+                "lng": "number",
+                "startTime": "date",
+                "endTime": "date",
+                "syncToLedger": "boolean"
+            }],
+            "required": false
         }
     },
     "validations": [],
     "relations": {},
     "acls": [],
-    "methods": {}
+    "methods": {
+        "prototype.updatePerson": {
+            "accepts": [{
+                "arg": "body",
+                "type": "object",
+                "required": true,
+                "description": "",
+                "http": {
+                    "source": "body"
+                }
+            }],
+            "returns": [{
+                "arg": "body",
+                "type": "object",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/update-person",
+                "verb": "post"
+            }]
+        }
+    }
 }
