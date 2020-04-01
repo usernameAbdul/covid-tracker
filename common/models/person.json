@@ -20,7 +20,8 @@
                 "lng": "number",
                 "startTime": "date",
                 "endTime": "date",
-                "syncToLedger": "boolean"
+                "syncToLedger": "boolean",
+                "altitude": "number"
             }],
             "required": false
         }

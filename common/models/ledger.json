@@ -1,32 +1,38 @@
 {
-  "name": "Ledger",
-  "base": "PersistedModel",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "timeSlotId": {
-      "type": "string",
-      "required": true
+    "name": "Ledger",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
     },
-    "locationId": {
-      "type": "string",
-      "required": true
+    "properties": {
+        "altitude": {
+            "type": "number",
+            "required": true
+        },
+        "startTime": {
+            "type": "date",
+            "required": true
+        },
+        "endTime": {
+            "type": "date",
+            "required": true
+        },
+        "lat": {
+            "type": "number",
+            "required": true
+        },
+        "lng": {
+            "type": "number",
+            "required": true
+        },
+        "personId": {
+            "type": "string",
+            "required": true
+        }
     },
-    "personIds": {
-      "type": [
-        "string"
-      ],
-      "required": true
-    },
-    "date": {
-      "type": "date",
-      "required": true
-    }
-  },
-  "validations": [],
-  "relations": {},
-  "acls": [],
-  "methods": {}
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
 }
