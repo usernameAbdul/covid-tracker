@@ -1,13 +1,6 @@
 'use strict';
 const lbApp = require('../../server/server');
 module.exports = function(Person) {
-    Person.observe('before save', async function(ctx) {
-        if (ctx.isNewInstance) {
-            ctx.instance.id = ctx.instance.phone;
-            delete ctx.instance.phone;
-        }
-    });
-
     Person.prototype.updatePerson = async function(body) {
         var body;
         try {
