@@ -1,5 +1,5 @@
 'use strict';
-
+const lbApp = require('../../server/server');
 module.exports = function(Person) {
     Person.prototype.updatePerson = async function(body) {
         var body;
@@ -7,6 +7,9 @@ module.exports = function(Person) {
             var error = [];
             var PersonInstance = this;
             var location = PersonInstance.location;
+            if (!body.location) {
+                throw Error('Wrong request body discription');
+            }
             body.location.forEach((loc, i) => {
                 if (!loc.altitude) {
                     error.push('Missing attribute altitude at index ' + i);
@@ -34,6 +37,7 @@ module.exports = function(Person) {
             const newPerson = await PersonInstance.updateAttributes({
                 location: location
             });
+            if (newPerson) {}
             return 'Location Updated';
         } catch (error) {
             throw new Error(error);
