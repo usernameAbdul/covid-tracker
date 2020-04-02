@@ -1,6 +1,7 @@
 'use strict';
 const lbApp = require('../../server/server');
 module.exports = function(Person) {
+    Person.validatesUniquenessOf('phone');
     Person.prototype.updatePerson = async function(body) {
         var body;
         try {
