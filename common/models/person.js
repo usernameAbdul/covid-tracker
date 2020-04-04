@@ -11,7 +11,14 @@ module.exports = function(Person) {
             if (!body.location) {
                 throw Error('Wrong request body discription');
             }
+
             body.location.forEach((loc, i) => {
+                if (!loc.syncToLedger) {
+                    error.push('Missing attribute syncToLedger at index ' + i);
+                }
+                if (!loc.date) {
+                    error.push('Missing attribute date at index ' + i);
+                }
                 if (!loc.altitude) {
                     error.push('Missing attribute altitude at index ' + i);
                 }
@@ -38,11 +45,11 @@ module.exports = function(Person) {
             //creating ledgers
             console.log('check if works===>', PersonInstance.id);
             await Promise.all(
-                body.location.map(loc => _createLedger(loc, PersonInstance.id))
+                body.location.map((loc) => _createLedger(loc, PersonInstance.id))
             );
 
             const newPerson = await PersonInstance.updateAttributes({
-                location: location
+                location: location,
             });
 
             return 'Location Updated';
@@ -59,7 +66,7 @@ async function _createLedger(loc, id) {
             endTime: loc.endTime,
             lat: loc.lat,
             lng: loc.lng,
-            personId: id
+            personId: id,
         });
     } catch (e) {
         console.log(e);

@@ -1,22 +1,11 @@
 {
-  "name": "Interaction",
-  "base": "PersistedModel",
+  "name": "Administrator",
+  "base": "User",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
-  "properties": {
-    "ledgerId": {
-      "type": "string",
-      "required": true
-    },
-    "userId": {
-      "type": [
-        "string"
-      ],
-      "required": true
-    }
-  },
+  "properties": {},
   "validations": [],
   "relations": {},
   "acls": [

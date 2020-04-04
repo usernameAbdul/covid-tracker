@@ -1,38 +1,45 @@
 {
-    "name": "Ledger",
-    "base": "PersistedModel",
-    "idInjection": true,
-    "options": {
-        "validateUpsert": true
+  "name": "Ledger",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "altitude": {
+      "type": "number",
+      "required": true
     },
-    "properties": {
-        "altitude": {
-            "type": "number",
-            "required": true
-        },
-        "startTime": {
-            "type": "date",
-            "required": true
-        },
-        "endTime": {
-            "type": "date",
-            "required": true
-        },
-        "lat": {
-            "type": "number",
-            "required": true
-        },
-        "lng": {
-            "type": "number",
-            "required": true
-        },
-        "personId": {
-            "type": "string",
-            "required": true
-        }
+    "startTime": {
+      "type": "date",
+      "required": true
     },
-    "validations": [],
-    "relations": {},
-    "acls": [],
-    "methods": {}
+    "endTime": {
+      "type": "date",
+      "required": true
+    },
+    "lat": {
+      "type": "number",
+      "required": true
+    },
+    "lng": {
+      "type": "number",
+      "required": true
+    },
+    "personId": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "superUser",
+      "permission": "ALLOW"
+    }
+  ],
+  "methods": {}
 }

@@ -54,5 +54,13 @@
   "Interaction": {
     "dataSource": "covid-tracker",
     "public": true
+  },
+  "Administrator": {
+    "dataSource": "covid-tracker",
+    "public": true
+  },
+  "Symptoms": {
+    "dataSource": "covid-tracker",
+    "public": true
   }
 }

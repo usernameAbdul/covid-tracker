@@ -1,31 +1,26 @@
 {
-  "name": "Interaction",
+  "name": "Symptoms",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "ledgerId": {
+    "name": {
       "type": "string",
       "required": true
     },
-    "userId": {
-      "type": [
-        "string"
-      ],
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "status": {
+      "type": "boolean",
       "required": true
     }
   },
   "validations": [],
   "relations": {},
-  "acls": [
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "superUser",
-      "permission": "ALLOW"
-    }
-  ],
+  "acls": [],
   "methods": {}
 }
