@@ -27,7 +27,7 @@
             "required": false
         },
         "symptoms": {
-            "type": ["string"],
+            "type": [{ "id": "string", "date": "date" }],
             "required": false
         }
     },
