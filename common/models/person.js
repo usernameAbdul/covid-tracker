@@ -2,6 +2,32 @@
 const lbApp = require('../../server/server');
 module.exports = function(Person) {
     Person.validatesUniquenessOf('phone');
+    Person.prototype.postPersonSymptoms = async function(body) {
+        try {
+            var personInstance = this;
+            var temp = personInstance;
+            var symptoms = [];
+            if (!body.symptoms) {
+                throw Error('Wrong request body discription');
+            }
+            body.symptoms.forEach((symptom, i) => {
+                if (!symptom.id) {
+                    throw Error('Missing attribute id at index ' + i);
+                }
+                if (!symptom.date) {
+                    throw Error('Missing attribute date at index ' + i);
+                }
+                temp.symptoms.push({ id: symptom.id, date: symptom.date });
+            });
+
+            const newPerson = await personInstance.updateAttributes({
+                symptoms: temp.symptoms,
+            });
+            return 'Symptoms Updated';
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
     Person.prototype.getPersonSymptoms = async function() {
         var personInstance = this;
         if (!personInstance.symptoms) {

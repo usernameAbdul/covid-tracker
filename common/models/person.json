@@ -55,6 +55,13 @@
             "principalId": "$authenticated",
             "permission": "ALLOW",
             "property": "getPersonSymptoms"
+        },
+        {
+            "accessType": "EXECUTE",
+            "principalType": "ROLE",
+            "principalId": "$authenticated",
+            "permission": "ALLOW",
+            "property": "postPersonSymptoms"
         }
     ],
     "methods": {
@@ -92,6 +99,28 @@
             "http": [{
                 "path": "/get-symptoms",
                 "verb": "get"
+            }]
+        },
+        "prototype.postPersonSymptoms": {
+            "accepts": [{
+                "arg": "body",
+                "type": "object",
+                "required": false,
+                "description": "",
+                "http": {
+                    "source": "body"
+                }
+            }],
+            "returns": [{
+                "arg": "body",
+                "type": "object",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/post-symptoms",
+                "verb": "post"
             }]
         }
     }
