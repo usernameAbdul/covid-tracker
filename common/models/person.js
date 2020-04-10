@@ -2,6 +2,21 @@
 const lbApp = require('../../server/server');
 module.exports = function(Person) {
     Person.validatesUniquenessOf('phone');
+    Person.prototype.getPersonSymptoms = async function() {
+        var personInstance = this;
+        if (!personInstance.symptoms) {
+            return [];
+        }
+        if (personInstance.symptoms.length === 0) {
+            return [];
+        }
+
+        var personSymptoms = await Promise.all(
+            personInstance.symptoms.map((x) => _getSymptomDetails(x))
+        );
+
+        return personSymptoms;
+    };
     Person.prototype.updatePerson = async function(body) {
         var body;
         try {
@@ -71,4 +86,11 @@ async function _createLedger(loc, id) {
     } catch (e) {
         console.log(e);
     }
+}
+async function _getSymptomDetails(symptom) {
+    const symptomDetails = await lbApp.models['Symptoms'].findById(symptom.id);
+    var temp1 = { postedOn: symptom.date };
+    var temp2 = {...symptomDetails };
+    var temp3 = {...temp2.__data, ...temp1 };
+    return temp3;
 }

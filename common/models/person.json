@@ -27,7 +27,10 @@
             "required": false
         },
         "symptoms": {
-            "type": [{ "id": "string", "date": "date" }],
+            "type": [{
+                "id": "string",
+                "date": "date"
+            }],
             "required": false
         }
     },
@@ -45,6 +48,13 @@
             "principalId": "$authenticated",
             "permission": "ALLOW",
             "property": "updatePerson"
+        },
+        {
+            "accessType": "EXECUTE",
+            "principalType": "ROLE",
+            "principalId": "$authenticated",
+            "permission": "ALLOW",
+            "property": "getPersonSymptoms"
         }
     ],
     "methods": {
@@ -68,6 +78,20 @@
             "http": [{
                 "path": "/update-person",
                 "verb": "post"
+            }]
+        },
+        "prototype.getPersonSymptoms": {
+            "accepts": [],
+            "returns": [{
+                "arg": "symptoms",
+                "type": "array",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/get-symptoms",
+                "verb": "get"
             }]
         }
     }
