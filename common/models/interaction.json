@@ -6,15 +6,17 @@
     "validateUpsert": true
   },
   "properties": {
-    "ledgerId": {
-      "type": "string",
-      "required": true
+    "identityA": {
+      "type": "object",
+      "required": false
     },
-    "userId": {
-      "type": [
-        "string"
-      ],
-      "required": true
+    "identityB": {
+      "type": "object",
+      "required": false
+    },
+    "dist": {
+      "type": "number",
+      "required": false
     }
   },
   "validations": [],

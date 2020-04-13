@@ -1,127 +1,148 @@
 {
-    "name": "Person",
-    "base": "User",
-    "idInjection": true,
-    "options": {
-        "validateUpsert": true
+  "name": "Person",
+  "base": "User",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
     },
-    "properties": {
-        "name": {
-            "type": "string",
-            "required": true
-        },
-        "phone": {
-            "type": "string",
-            "required": true
-        },
-        "location": {
-            "type": [{
-                "lat": "number",
-                "lng": "number",
-                "startTime": "date",
-                "endTime": "date",
-                "syncToLedger": "boolean",
-                "altitude": "number",
-                "date": "date"
-            }],
-            "required": false
-        },
-        "symptoms": {
-            "type": [{
-                "id": "string",
-                "date": "date"
-            }],
-            "required": false
-        }
+    "phone": {
+      "type": "string",
+      "required": true
     },
-    "validations": [],
-    "relations": {},
-    "acls": [{
-            "accessType": "*",
-            "principalType": "ROLE",
-            "principalId": "superUser",
-            "permission": "ALLOW"
-        },
+    "location": {
+      "type": [
         {
-            "accessType": "EXECUTE",
-            "principalType": "ROLE",
-            "principalId": "$authenticated",
-            "permission": "ALLOW",
-            "property": "updatePerson"
-        },
-        {
-            "accessType": "EXECUTE",
-            "principalType": "ROLE",
-            "principalId": "$authenticated",
-            "permission": "ALLOW",
-            "property": "getPersonSymptoms"
-        },
-        {
-            "accessType": "EXECUTE",
-            "principalType": "ROLE",
-            "principalId": "$authenticated",
-            "permission": "ALLOW",
-            "property": "postPersonSymptoms"
+          "lat": "number",
+          "lng": "number",
+          "startTime": "date",
+          "endTime": "date",
+          "syncToLedger": "boolean",
+          "altitude": "number",
+          "date": "date"
         }
-    ],
-    "methods": {
-        "prototype.updatePerson": {
-            "accepts": [{
-                "arg": "body",
-                "type": "object",
-                "required": true,
-                "description": "",
-                "http": {
-                    "source": "body"
-                }
-            }],
-            "returns": [{
-                "arg": "body",
-                "type": "object",
-                "root": true,
-                "description": ""
-            }],
-            "description": "",
-            "http": [{
-                "path": "/update-person",
-                "verb": "post"
-            }]
-        },
-        "prototype.getPersonSymptoms": {
-            "accepts": [],
-            "returns": [{
-                "arg": "symptoms",
-                "type": "array",
-                "root": true,
-                "description": ""
-            }],
-            "description": "",
-            "http": [{
-                "path": "/get-symptoms",
-                "verb": "get"
-            }]
-        },
-        "prototype.postPersonSymptoms": {
-            "accepts": [{
-                "arg": "body",
-                "type": "object",
-                "required": false,
-                "description": "",
-                "http": {
-                    "source": "body"
-                }
-            }],
-            "returns": [{
-                "arg": "body",
-                "type": "object",
-                "root": true,
-                "description": ""
-            }],
-            "description": "",
-            "http": [{
-                "path": "/post-symptoms",
-                "verb": "post"
-            }]
+      ],
+      "required": false
+    },
+    "symptoms": {
+      "type": [
+        {
+          "id": "string",
+          "date": "date"
         }
+      ],
+      "required": false
     }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "superUser",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "updatePerson"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getPersonSymptoms"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "postPersonSymptoms"
+    }
+  ],
+  "methods": {
+    "prototype.updatePerson": {
+      "accepts": [
+        {
+          "arg": "body",
+          "type": "object",
+          "required": true,
+          "description": "",
+          "http": {
+            "source": "body"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "body",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/update-person",
+          "verb": "post"
+        }
+      ]
+    },
+    "prototype.getPersonSymptoms": {
+      "accepts": [],
+      "returns": [
+        {
+          "arg": "symptoms",
+          "type": "array",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/get-symptoms",
+          "verb": "get"
+        }
+      ]
+    },
+    "prototype.postPersonSymptoms": {
+      "accepts": [
+        {
+          "arg": "body",
+          "type": "object",
+          "required": false,
+          "description": "",
+          "http": {
+            "source": "body"
+          }
+        }
+      ],
+      "returns": [
+        {
+          "arg": "body",
+          "type": "object",
+          "root": true,
+          "description": ""
+        }
+      ],
+      "description": "",
+      "http": [
+        {
+          "path": "/post-symptoms",
+          "verb": "post"
+        }
+      ]
+    }
+  }
 }

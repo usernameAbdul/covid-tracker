@@ -1,0 +1,21 @@
+{
+    "name": "CronJobLog",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
+    },
+
+    "mixins": {
+        "TimeStamp": true
+    },
+    "properties": {
+        "numberOfInteractions": {
+            "type": "number"
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
+}
