@@ -1,5 +1,6 @@
 'use strict';
 const lbApp = require('../../server/server');
+const moment = require('moment');
 module.exports = function(Person) {
     Person.validatesUniquenessOf('phone');
     Person.prototype.postPersonSymptoms = async function(body) {
@@ -40,8 +41,18 @@ module.exports = function(Person) {
         var personSymptoms = await Promise.all(
             personInstance.symptoms.map((x) => _getSymptomDetails(x))
         );
+        var sortedSymptoms = {};
 
-        return personSymptoms;
+        personSymptoms.forEach((symptom) => {
+            //sortedSymptoms.filter(x=>)
+            if (!(symptom.postedOn in sortedSymptoms)) {
+                sortedSymptoms[symptom.postedOn] = personSymptoms.filter(
+                    (x) => x.postedOn === symptom.postedOn
+                );
+            }
+        });
+        console.log(sortedSymptoms);
+        return sortedSymptoms;
     };
     Person.prototype.updatePerson = async function(body) {
         var body;
@@ -115,7 +126,7 @@ async function _createLedger(loc, id) {
 }
 async function _getSymptomDetails(symptom) {
     const symptomDetails = await lbApp.models['Symptoms'].findById(symptom.id);
-    var temp1 = { postedOn: symptom.date };
+    var temp1 = { postedOn: moment(symptom.date).startOf('day').toISOString() };
     var temp2 = {...symptomDetails };
     var temp3 = {...temp2.__data, ...temp1 };
     return temp3;
