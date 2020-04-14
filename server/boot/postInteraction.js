@@ -1,9 +1,9 @@
 'use strict';
 const cron = require('node-cron');
 module.exports = function(app) {
-    // cron.schedule('*/5 * * * *', function() {
-    //     _postingInteractions(app);
-    // });
+    cron.schedule('*/1 * * * *', function() {
+        _postingInteractions(app);
+    });
 };
 
 async function _postingInteractions(app) {
@@ -22,18 +22,23 @@ async function _postingInteractions(app) {
     //based on some testing, on my mac, 5000 ledger transactions take approx 30 seconds to get interactions. Probably is faster on EC2
 
     //This function needs to run every 5 mins. Need to cap transactions at 5000 max.
-    const getLedgerData = () => {
+    const getLedgerData = (lastJob) => {
         let mongoitems = [];
         return new Promise(function(resolve, reject) {
             const url =
                 'mongodb+srv://covid-tracker-db-user:Newyork2020!@cluster0-su83o.mongodb.net/test?retryWrites=true&w=majority';
             MongoClient.connect(url, function(err, client) {
                 const db = client.db('test');
-                var cursor = db.collection('Ledger').find({}).limit(1000);
+                if (lastJob.length === 0) {
+                    var cursor = db.collection('Ledger').find({});
+                } else {
+                    var cursor = db
+                        .collection('Ledger')
+                        .find({ endTime: { gte: lastJob[0].createdAt } });
+                }
 
                 function iterateFunc(doc) {
                     mongoitems.push(doc);
-                    //console.log(mongoitems.length)
                 }
 
                 function errorFunc(error) {
@@ -44,7 +49,7 @@ async function _postingInteractions(app) {
                     }
                 }
                 cursor.forEach(iterateFunc, errorFunc);
-                assert.equal(null, err);
+                // assert.equal(null, err);
             });
         });
     };
@@ -152,8 +157,11 @@ async function _postingInteractions(app) {
             console.log(cronJobLog);
         });
     };
-
-    getLedgerData()
+    const lastJob = await app.models.CronJobLog.find({
+        order: 'createdAt DESC',
+        limit: 1,
+    });
+    getLedgerData(lastJob)
         .then((mongoItems) => getInteractionGraph(mongoItems))
         .then((interactionsGraph) =>
             evaluateInteractionGraphDistance(interactionsGraph)
