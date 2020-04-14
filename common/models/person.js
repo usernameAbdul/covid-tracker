@@ -5,6 +5,7 @@ module.exports = function(Person) {
     Person.validatesUniquenessOf('phone');
     Person.prototype.postPersonSymptoms = async function(body) {
         try {
+            console.log('idh agya atleast');
             var personInstance = this;
             var temp = personInstance;
             var symptoms = [];
@@ -18,7 +19,11 @@ module.exports = function(Person) {
                 if (!symptom.date) {
                     throw Error('Missing attribute date at index ' + i);
                 }
-                temp.symptoms.push({ id: symptom.id, date: symptom.date });
+                if (!'symptoms' in temp) {
+                    temp.symptoms.push({ id: symptom.id, date: symptom.date });
+                } else {
+                    temp['symptoms'] = [{ id: symptom.id, date: symptom.date }];
+                }
             });
 
             const newPerson = await personInstance.updateAttributes({
