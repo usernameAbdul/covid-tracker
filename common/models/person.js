@@ -51,7 +51,7 @@ module.exports = function(Person) {
                 );
             }
         });
-        console.log(sortedSymptoms);
+
         return sortedSymptoms;
     };
     Person.prototype.updatePerson = async function(body) {
