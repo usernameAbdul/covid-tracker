@@ -1,9 +1,9 @@
 'use strict';
 const cron = require('node-cron');
 module.exports = function(app) {
-    // cron.schedule('*/1 * * * *', function() {
-    //     _postingInteractions(app);
-    // });
+    cron.schedule('*/5 * * * *', function() {
+        _postingInteractions(app);
+    });
 };
 
 async function _postingInteractions(app) {
@@ -24,17 +24,18 @@ async function _postingInteractions(app) {
     //This function needs to run every 5 mins. Need to cap transactions at 5000 max.
     const getLedgerData = (lastJob) => {
         let mongoitems = [];
-        return new Promise(function(resolve, reject) {
+        return new Promise(async function(resolve, reject) {
             const url =
                 'mongodb+srv://covid-tracker-db-user:Newyork2020!@cluster0-su83o.mongodb.net/test?retryWrites=true&w=majority';
-            MongoClient.connect(url, function(err, client) {
+            MongoClient.connect(url, async function(err, client) {
                 const db = client.db('test');
+                var cursor;
                 if (lastJob.length === 0) {
-                    var cursor = db.collection('Ledger').find({});
+                    cursor = db.collection('Ledger').find({});
                 } else {
-                    var cursor = db
-                        .collection('Ledger')
-                        .find({ endTime: { gte: lastJob[0].createdAt } });
+                    cursor = db.collection('Ledger').find({
+                        endTime: { $gte: lastJob.createdAt },
+                    });
                 }
 
                 function iterateFunc(doc) {
@@ -43,7 +44,6 @@ async function _postingInteractions(app) {
 
                 function errorFunc(error) {
                     if (error === null) {
-                        console.log('here');
                         resolve(mongoitems);
                         client.close();
                     }
@@ -69,12 +69,10 @@ async function _postingInteractions(app) {
     //this function checks if lat is same
     const findInteraction = (element, mongoItems) => {
         return new Promise(function(resolve, reject) {
-            //console.log(element)
             mongoItems.forEach(function(element2, index2, array2) {
                 if (element2.lat === element.lat) {
                     //this needs to change to matching lat and long by rounding it. Waiting for DB to contain data 5 decimal places value.
                     interactionsGraph.push(element);
-                    //console.log(interactionsGraph.length)
                 } else {
                     return;
                 }
