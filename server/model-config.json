@@ -65,5 +65,9 @@
   "CronJobLog": {
     "dataSource": "covid-tracker",
     "public": true
+  },
+  "Notification": {
+    "dataSource": "covid-tracker",
+    "public": true
   }
 }
