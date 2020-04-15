@@ -19,7 +19,11 @@ module.exports = function(Person) {
                 if (!symptom.date) {
                     throw Error('Missing attribute date at index ' + i);
                 }
-                if (!'symptoms' in temp) {
+                var allKeys = Object.keys(temp.__data);
+
+                if (allKeys.includes('symptoms')) {
+                    console.log('we are here');
+                    console.log(temp);
                     temp.symptoms.push({ id: symptom.id, date: symptom.date });
                 } else {
                     temp['symptoms'] = [{ id: symptom.id, date: symptom.date }];
@@ -29,6 +33,7 @@ module.exports = function(Person) {
             const newPerson = await personInstance.updateAttributes({
                 symptoms: temp.symptoms,
             });
+
             return 'Symptoms Updated';
         } catch (error) {
             throw new Error(error);

@@ -99,7 +99,7 @@ async function _postingInteractions(app) {
                     lat: interactionsGraph[index + 1].lat,
                     lon: interactionsGraph[index + 1].lng,
                 }, { exact: true, unit: 'meter' });
-                if (dist < 6) {
+                if (dist < 2) {
                     //console.log('close proximity achieved');
                     //console.log(element.personId)
                     //console.log(interactionsGraph[index + 1].personId)
