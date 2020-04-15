@@ -1,10 +1,10 @@
 'use strict';
 const cron = require('node-cron');
-module.exports = function(app) {
-    cron.schedule('*/5 * * * *', function() {
-        _postingInteractions(app);
-    });
-};
+// module.exports = function(app) {
+//     cron.schedule('*/5 * * * *', function() {
+//         _postingInteractions(app);
+//     });
+// };
 
 async function _postingInteractions(app) {
     //dependecies
