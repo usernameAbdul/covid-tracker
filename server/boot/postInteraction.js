@@ -4,6 +4,7 @@ module.exports = function(app) {
     // cron.schedule('*/5 * * * *', function() {
     //     _postingInteractions(app);
     // });
+    //_postingInteractions(app);
 };
 
 async function _postingInteractions(app) {
@@ -33,9 +34,9 @@ async function _postingInteractions(app) {
                 if (lastJob.length === 0) {
                     cursor = db.collection('Ledger').find({});
                 } else {
-                    cursor = db.collection('Ledger').find({
-                        endTime: { $gte: lastJob.createdAt },
-                    });
+                    cursor = db
+                        .collection('Ledger')
+                        .find({ endTime: { $gte: lastJob[0].createdAt } });
                 }
 
                 function iterateFunc(doc) {
@@ -71,6 +72,7 @@ async function _postingInteractions(app) {
         return new Promise(function(resolve, reject) {
             mongoItems.forEach(function(element2, index2, array2) {
                 if (element2.lat === element.lat) {
+                    // console.log('lats are the same');
                     //this needs to change to matching lat and long by rounding it. Waiting for DB to contain data 5 decimal places value.
                     interactionsGraph.push(element);
                 } else {
@@ -89,6 +91,7 @@ async function _postingInteractions(app) {
                     lon: interactionsGraph[index + 1].lng,
                 }, { exact: true, unit: 'meter' });
                 if (dist > 0 && dist < 6.0) {
+                    //console.log('close proximity achieved');
                     //console.log(element.personId)
                     //console.log(interactionsGraph[index + 1].personId)
                     if (element.personId === interactionsGraph[index + 1].personId) {
@@ -99,7 +102,8 @@ async function _postingInteractions(app) {
                             identityB: interactionsGraph[index + 1],
                             dist: dist,
                         };
-                        // console.log(interimInteractionObject);
+                        //console.log(interimInteractionObject);
+                        //console.log(interimInteractionObject);
                         interactionsPoints.push(interimInteractionObject);
                     }
                 }
@@ -114,13 +118,28 @@ async function _postingInteractions(app) {
     };
 
     const evaluateInteractionPoints = (interactionsPoints) => {
+        console.log(interactionsPoints);
         return new Promise(function(resolve, reject) {
             interactionsPoints.forEach(function(element, index, array) {
                 if (element.identityA.altitude === element.identityB.altitude) {
+                    console.log('---------------------------------------');
+                    console.log('altitude is same');
+                    console.log('Matching startTime');
                     if (element.identityA.startTime < element.identityB.startTime) {
+                        console.log('startTime matched');
+                        console.log(
+                            element.identityA.startTime + '<' + element.identityB.startTime
+                        );
+
+                        console.log('Matching endTime');
+                        console.log(
+                            element.identityA.endTime + '>' + element.identityB.endTime
+                        );
                         if (element.identityA.endTime > element.identityB.endTime) {
-                            // console.log('element');
+                            console.log(' endTime matched');
+
                             interactions.push(element);
+                            console.log(element, 'pushed to array');
                         }
                     }
 
@@ -159,6 +178,7 @@ async function _postingInteractions(app) {
         order: 'createdAt DESC',
         limit: 1,
     });
+
     getLedgerData(lastJob)
         .then((mongoItems) => getInteractionGraph(mongoItems))
         .then((interactionsGraph) =>

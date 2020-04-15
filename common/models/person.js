@@ -118,13 +118,15 @@ module.exports = function(Person) {
         var userInteractions = [];
         var personInstance = this;
         const allInteractions = await lbApp.models['Interaction'].find();
+        console.log(allInteractions);
+        console.log(personInstance);
         allInteractions.forEach((interaction) => {
-            if (interaction.identityA._id === personInstance.id) {
+            if (interaction.identityA.personId === personInstance.id) {
                 userInteractions.push({
                     interactedWith: interaction.identityB,
                     dist: interaction.dist,
                 });
-            } else if (nteraction.identityB._id === personInstance.id) {
+            } else if (interaction.identityB.personId === personInstance.id) {
                 userInteractions.push({
                     interactedWith: interaction.identityA,
                     dist: interaction.dist,
