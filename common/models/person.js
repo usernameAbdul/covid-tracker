@@ -114,6 +114,32 @@ module.exports = function(Person) {
             throw new Error(error);
         }
     };
+    Person.prototype.getInteractions = async function() {
+        var userInteractions = [];
+        var personInstance = this;
+        const allInteractions = await lbApp.models['Interaction'].find();
+
+        allInteractions.forEach((interaction) => {
+            if (
+                interaction.identityA.personId.toString() ===
+                personInstance.id.toString()
+            ) {
+                userInteractions.push({
+                    interactedWith: interaction.identityB,
+                    dist: interaction.dist,
+                });
+            } else if (
+                interaction.identityB.personId.toString() ===
+                personInstance.id.toString()
+            ) {
+                userInteractions.push({
+                    interactedWith: interaction.identityA,
+                    dist: interaction.dist,
+                });
+            }
+        });
+        return userInteractions;
+    };
 };
 async function _createLedger(loc, id) {
     try {
