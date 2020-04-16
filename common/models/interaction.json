@@ -1,33 +1,34 @@
 {
-  "name": "Interaction",
-  "base": "PersistedModel",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "identityA": {
-      "type": "object",
-      "required": false
+    "name": "Interaction",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
     },
-    "identityB": {
-      "type": "object",
-      "required": false
+    "mixins": {
+        "TimeStamp": true
     },
-    "dist": {
-      "type": "number",
-      "required": false
-    }
-  },
-  "validations": [],
-  "relations": {},
-  "acls": [
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "superUser",
-      "permission": "ALLOW"
-    }
-  ],
-  "methods": {}
+    "properties": {
+        "identityA": {
+            "type": "object",
+            "required": false
+        },
+        "identityB": {
+            "type": "object",
+            "required": false
+        },
+        "dist": {
+            "type": "number",
+            "required": false
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [{
+        "accessType": "*",
+        "principalType": "ROLE",
+        "principalId": "superUser",
+        "permission": "ALLOW"
+    }],
+    "methods": {}
 }

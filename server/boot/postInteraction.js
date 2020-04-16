@@ -1,9 +1,10 @@
 'use strict';
 const cron = require('node-cron');
+const moment = require('moment');
 module.exports = function(app) {
-    // cron.schedule('*/5 * * * *', function() {
-    //     _postingInteractions(app);
-    // });
+    cron.schedule('*/25 * * * * *', function() {
+        _postingInteractions(app);
+    });
 };
 
 async function _postingInteractions(app) {
@@ -130,7 +131,7 @@ async function _postingInteractions(app) {
     const evaluateInteractionPoints = (interactionsPoints) => {
         console.log(interactionsPoints);
         return new Promise(function(resolve, reject) {
-            interactionsPoints.forEach(function(element, index, array) {
+            interactionsPoints.forEach(async function(element, index, array) {
                 let roundAltitude1 = Math.round(element.identityA.altitude);
                 let roundAltitude2 = Math.round(element.identityB.altitude);
                 if (roundAltitude1 === roundAltitude2) {
@@ -154,7 +155,45 @@ async function _postingInteractions(app) {
                                 element.identityA.personId.toString() !==
                                 element.identityB.personId.toString()
                             ) {
-                                interactions.push(element);
+                                let today = new Date();
+                                const todaysInteractions = await app.models.Interaction.find({
+                                    where: {
+                                        createdAt: {
+                                            gte: moment(today).startOf('day').toISOString(),
+                                        },
+                                    },
+                                });
+                                if (todaysInteractions.length) {
+                                    todaysInteractions.forEach((interaction) => {
+                                        if (
+                                            interaction.identityA === element.identityA &&
+                                            interaction.identityB !== element.identityB
+                                        ) {
+                                            //push interaction
+                                            interactions.push(element);
+                                        } else if (
+                                            interaction.identityA !== element.identityA &&
+                                            interaction.identityB === element.identityB
+                                        ) {
+                                            //push interaction
+                                            interactions.push(element);
+                                        } else if (
+                                            interaction.identityA === element.identityB &&
+                                            interaction.identityB !== element.identityA
+                                        ) {
+                                            //push interaction
+                                            interactions.push(element);
+                                        } else if (
+                                            interaction.identityB === element.identityA &&
+                                            interaction.identityA !== element.identityB
+                                        ) {
+                                            //push interaction
+                                            interactions.push(element);
+                                        }
+                                    });
+                                } else {
+                                    interactions.push(element);
+                                }
                             }
                         }
                     }
