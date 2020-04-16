@@ -2,9 +2,9 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
-    cron.schedule('*/25 * * * * *', function() {
-        _postingInteractions(app);
-    });
+    // cron.schedule('*/25 * * * * *', function() {
+    //     _postingInteractions(app);
+    // });
 };
 
 async function _postingInteractions(app) {
