@@ -1,23 +1,24 @@
 {
-  "name": "Notification",
-  "base": "PersistedModel",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "personIds": {
-      "type": [
-        "string"
-      ],
-      "required": true
+    "name": "Notification",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
     },
-    "description": {
-      "type": "string"
-    }
-  },
-  "validations": [],
-  "relations": {},
-  "acls": [],
-  "methods": {}
+    "properties": {
+        "personIds": {
+            "type": "string",
+            "required": true
+        },
+        "notificationTitle": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": {}
 }
