@@ -2,9 +2,9 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
-    // cron.schedule('*/25 * * * * *', function() {
-       _postingInteractions(app);
-    // });
+    cron.schedule('*/31 * * * * *', function() {
+        _postingInteractions(app);
+    });
 };
 
 async function _postingInteractions(app) {
@@ -34,17 +34,16 @@ async function _postingInteractions(app) {
                 if (lastJob.length === 0) {
                     cursor = db.collection('Ledger').find({});
                 } else {
-                
-                    // cursor = db
-                    //     .collection('Ledger')
-                    //     .find({ endTime: { $gte: lastJob[0].createdAt } });
                     cursor = db
                         .collection('Ledger')
-                        .find({})
-                        .sort({
-                            endTime: -1.0,
-                        })
-                        .limit(600);
+                        .find({ endTime: { $gte: lastJob[0].createdAt } });
+                    // cursor = db
+                    //     .collection('Ledger')
+                    //     .find({})
+                    //     .sort({
+                    //         endTime: -1.0,
+                    //     })
+                    //     .limit(600);
                 }
 
                 function iterateFunc(doc) {
@@ -207,7 +206,7 @@ async function _postingInteractions(app) {
                     //Interactions format: IdentityA, identityB
                 }
                 if (array.length === index + 1) {
-                    console.log(interactions.length)
+                    console.log(interactions.length);
                     resolve(interactions);
                 }
             });
@@ -236,51 +235,55 @@ async function _postingInteractions(app) {
         limit: 1,
     });
 
-
-
-
     const removeExistingInteractions = (interactions) => {
-        console.log(typeof interactions)
-        return new Promise(async function(resolve, reject){
-            console.log('inside removeExisting Interactions')
-            console.log(interactions.length)
+        console.log(typeof interactions);
+        return new Promise(async function(resolve, reject) {
+            console.log('inside removeExisting Interactions');
+            console.log(interactions.length);
             let today = new Date();
-                const todaysInteractions = await app.models.Interaction.find({
-                    where: {
-                        createdAt: {
-                                    gte: moment(today).startOf('day').toISOString(),
-                                    },
-                                 },
-                     });
-                     if (todaysInteractions.length === 0){
-                         resolve(interactions)
-                     } else {
-                         console.log('here')
-                         todaysInteractions.forEach(function(element, index, array){
-                             console.log('pizza')
-                             console.log(interactions)
-                             interactions.forEach(function(element1, index1, array1){
-                                 console.log('here2')
-                                 if (element1.identityA.personId.toString() === element.identityA.personId.toString() && element1.identityB.personId.toString() === element.identityB.personId.toString()){
-                                        console.log('interaction already exists')
-                                 } else if (element1.identityA.personId.toString() === element.identityB.personId.toString() && element1.identityB.personId.toString() === element.identityA.personId.toString()){
-                                    console.log('interaction already exists')
-                                 } else {
-                                     if (index1 + 1 === array1.length){
-                                         if (index + 1 === array.length){
-                                            resolve(interactions)
-                                         }
-                                     }
-                                 }
-                             })
-                         })
-                        //resolve(interactions)
-                     }
-                    
-        })
-    }
-
-
+            const todaysInteractions = await app.models.Interaction.find({
+                where: {
+                    createdAt: {
+                        gte: moment(today).startOf('day').toISOString(),
+                    },
+                },
+            });
+            if (todaysInteractions.length === 0) {
+                resolve(interactions);
+            } else {
+                console.log('here');
+                todaysInteractions.forEach(function(element, index, array) {
+                    console.log('pizza');
+                    console.log(interactions);
+                    interactions.forEach(function(element1, index1, array1) {
+                        console.log('here2');
+                        if (
+                            element1.identityA.personId.toString() ===
+                            element.identityA.personId.toString() &&
+                            element1.identityB.personId.toString() ===
+                            element.identityB.personId.toString()
+                        ) {
+                            console.log('interaction already exists');
+                        } else if (
+                            element1.identityA.personId.toString() ===
+                            element.identityB.personId.toString() &&
+                            element1.identityB.personId.toString() ===
+                            element.identityA.personId.toString()
+                        ) {
+                            console.log('interaction already exists');
+                        } else {
+                            if (index1 + 1 === array1.length) {
+                                if (index + 1 === array.length) {
+                                    resolve(interactions);
+                                }
+                            }
+                        }
+                    });
+                });
+                //resolve(interactions)
+            }
+        });
+    };
 
     getLedgerData(lastJob)
         .then((mongoItems) => getInteractionGraph(mongoItems))
