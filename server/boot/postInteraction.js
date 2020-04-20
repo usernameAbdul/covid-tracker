@@ -2,10 +2,9 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
-    // cron.schedule('*/2 * * * *', function() {
-    //     _postingInteractions(app);
-    // });
-    _postingInteractions(app);
+    cron.schedule('*/1 * * * *', function() {
+        _postingInteractions(app);
+    });
 };
 
 async function _postingInteractions(app) {
@@ -32,21 +31,20 @@ async function _postingInteractions(app) {
             MongoClient.connect(url, async function(err, client) {
                 const db = client.db('test');
                 var cursor;
-                cursor = db
-                    .collection('Ledger')
-                    .find({})
-                    .sort({
-                        endTime: -1.0,
-                    })
-                    .limit(50);
-                // if (lastJob.length === 0) {
-                //     cursor = db.collection('Ledger').find({});
-                // } else {
-                //     cursor = db
-                //         .collection('Ledger')
-                //         .find({ endTime: { $gte: lastJob[0].createdAt } });
-
-                // }
+                // cursor = db
+                //     .collection('Ledger')
+                //     .find({})
+                //     .sort({
+                //         endTime: -1.0,
+                //     })
+                //     .limit(400);
+                if (lastJob.length === 0) {
+                    cursor = db.collection('Ledger').find({});
+                } else {
+                    cursor = db
+                        .collection('Ledger')
+                        .find({ endTime: { $gte: lastJob[0].createdAt } });
+                }
 
                 function iterateFunc(doc) {
                     mongoitems.push(doc);
@@ -306,53 +304,76 @@ async function _postingInteractions(app) {
                 let existsB;
                 let skips = 0;
                 //console.log('here');
-                todaysInteractions.forEach(function(element, index, array) {
+                console.log(interactions, '<----------');
+                interactions.forEach(function(element, index, array) {
                     //console.log('pizza');
                     //console.log(interactions);
-                    interactions.forEach(function(element1, index1, array1) {
-                        //console.log('here2');
+                    todaysInteractions.forEach(function(element1, index1, array1) {
+                        console.log('here2');
+
                         if (
-                            element1.identityA.personId.toString() ===
-                            element.identityA.personId.toString() &&
-                            element1.identityB.personId.toString() ===
-                            element.identityB.personId.toString()
+                            element.identityA.personId.toString() ===
+                            element1.identityA.personId.toString() &&
+                            element.identityB.personId.toString() !==
+                            element1.identityB.personId.toString()
                         ) {
-                            skips++;
+                            //push interaction
+
+                            finalInteractions.push(element);
                         } else if (
-                            element1.identityA.personId.toString() ===
-                            element.identityB.personId.toString() &&
-                            element1.identityB.personId.toString() ===
-                            element.identityA.personId.toString()
+                            element.identityA.personId.toString() !==
+                            element1.identityA.personId.toString() &&
+                            element.identityB.personId.toString() ===
+                            element1.identityB.personId.toString()
                         ) {
-                            skips++;
+                            //push interaction
+                            finalInteractions.push(element);
+                        } else if (
+                            element.identityA.personId.toString() ===
+                            element1.identityB.personId.toString() &&
+                            element.identityB.personId.toString() !==
+                            element1.identityA.personId.toString()
+                        ) {
+                            //push interaction
+                            finalInteractions.push(element);
+                        } else if (
+                            element.identityB.personId.toString() ===
+                            element1.identityA.personId.toString() &&
+                            element.identityA.personId.toString() !==
+                            element1.identityB.personId.toString()
+                        ) {
+                            //push interaction
+                            finalInteractions.push(element);
                         } else {
-                            finalInteractions.push(element1);
-                            // if (finalInteractions.length === 0) {
-                            //     finalInteractions.push(element1);
-                            // } else {
-                            //     exists = finalInteractions.filter(
-                            //         (x) =>
-                            //         x.identityA.personId.toString() ===
-                            //         element1.identityA.personId.toString() &&
-                            //         x.identityB.personId.toString() ===
-                            //         element1.identityB.personId.toString()
-                            //     );
-                            //     if (exists.length === 0) {
-                            //         finalInteractions.push(element1);
-                            //     }
-                            // }
-                            // if (index1 + 1 === array1.length) {
-                            //     if (index + 1 === array.length) {
-                            //resolve(interactions);
-
-                            // if (!finalInteractions.includes(element1)) {
-                            //     console.log('item pushed in final array');
-                            //     finalInteractions.push(element1);
-                            // }
-
-                            //     }
-                            // }
+                            console.log('-----------------------');
+                            console.log(element1);
+                            console.log(element);
                         }
+                        // if (
+                        //     element1.identityA.personId.toString() ===
+                        //     element.identityA.personId.toString() &&
+                        //     element1.identityB.personId.toString() ===
+                        //     element.identityB.personId.toString()
+                        // ) {
+                        //     skips++;
+                        // } else if (
+                        //     element1.identityA.personId.toString() ===
+                        //     element.identityB.personId.toString() &&
+                        //     element1.identityB.personId.toString() ===
+                        //     element.identityA.personId.toString()
+                        // ) {
+                        //     skips++;
+                        // }else if(  element1.identityA.personId.toString() !==
+                        // element.identityA.personId.toString() &&
+                        // element1.identityB.personId.toString() !==
+                        // element.identityB.personId.toString()){
+                        //     skips++;
+                        // }
+                        //  else {
+                        //     console.log(element1);
+                        //     finalInteractions.push(element);
+
+                        // }
                     });
                 });
                 console.log('total skips', skips);
