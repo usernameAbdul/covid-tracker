@@ -155,6 +155,9 @@ async function _postingInteractions(app) {
                                 element.identityA.personId.toString() !==
                                 element.identityB.personId.toString()
                             ) {
+                                console.log(element.identityA.personId.toString());
+                                console.log('===');
+                                console.log(element.identityB.personId.toString());
                                 // let today = new Date();
                                 // const todaysInteractions = await app.models.Interaction.find({
                                 //     where: {
