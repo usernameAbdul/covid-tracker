@@ -284,7 +284,16 @@ async function _postingInteractions(app) {
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
                             //resolve(interactions);
-                            finalInteractions.push(element1);
+                            let exists = finalInteractions.filter(
+                                (x) =>
+                                x.personId.toString() ===
+                                element1.identityA.personId.toString()
+                            );
+                            if (exists.length === 0) {
+                                console.log('item pushed in final array');
+                                finalInteractions.push(element1);
+                            }
+
                             //     }
                             // }
                         }
