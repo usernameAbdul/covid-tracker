@@ -259,6 +259,7 @@ async function _postingInteractions(app) {
                 resolve(interactions);
             } else {
                 let finalInteractions = [];
+                let skips = 0;
                 //console.log('here');
                 todaysInteractions.forEach(function(element, index, array) {
                     //console.log('pizza');
@@ -271,16 +272,15 @@ async function _postingInteractions(app) {
                             element1.identityB.personId.toString() ===
                             element.identityB.personId.toString()
                         ) {
-                            console.log('if A===A && B===B');
+                            skips++;
                         } else if (
                             element1.identityA.personId.toString() ===
                             element.identityB.personId.toString() &&
                             element1.identityB.personId.toString() ===
                             element.identityA.personId.toString()
                         ) {
-                            console.log('If A===B && B===A');
+                            skips++;
                         } else {
-                            console.log(finalInteractions.length);
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
                             //resolve(interactions);
@@ -290,7 +290,8 @@ async function _postingInteractions(app) {
                         }
                     });
                 });
-
+                console.log('total skips', skips);
+                console.log('final interactions', finalInteractions.length);
                 resolve(finalInteractions);
             }
         });
