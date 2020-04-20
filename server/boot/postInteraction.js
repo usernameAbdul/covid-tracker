@@ -276,12 +276,12 @@ async function _postingInteractions(app) {
                         ) {
                             console.log('interaction already exists');
                         } else {
-                            if (index1 + 1 === array1.length) {
-                                if (index + 1 === array.length) {
-                                    //resolve(interactions);
-                                    finalInteractions.push(element1);
-                                }
-                            }
+                            // if (index1 + 1 === array1.length) {
+                            //     if (index + 1 === array.length) {
+                            //resolve(interactions);
+                            finalInteractions.push(element1);
+                            //     }
+                            // }
                         }
                     });
                 });
