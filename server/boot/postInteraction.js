@@ -5,6 +5,7 @@ module.exports = function(app) {
     // cron.schedule('*/2 * * * *', function() {
     //     _postingInteractions(app);
     // });
+    _postingInteractions(app);
 };
 
 async function _postingInteractions(app) {
@@ -31,20 +32,21 @@ async function _postingInteractions(app) {
             MongoClient.connect(url, async function(err, client) {
                 const db = client.db('test');
                 var cursor;
-                if (lastJob.length === 0) {
-                    cursor = db.collection('Ledger').find({});
-                } else {
-                    cursor = db
-                        .collection('Ledger')
-                        .find({ endTime: { $gte: lastJob[0].createdAt } });
-                    // cursor = db
-                    //     .collection('Ledger')
-                    //     .find({})
-                    //     .sort({
-                    //         endTime: -1.0,
-                    //     })
-                    //     .limit(600);
-                }
+                cursor = db
+                    .collection('Ledger')
+                    .find({})
+                    .sort({
+                        endTime: -1.0,
+                    })
+                    .limit(50);
+                // if (lastJob.length === 0) {
+                //     cursor = db.collection('Ledger').find({});
+                // } else {
+                //     cursor = db
+                //         .collection('Ledger')
+                //         .find({ endTime: { $gte: lastJob[0].createdAt } });
+
+                // }
 
                 function iterateFunc(doc) {
                     mongoitems.push(doc);
@@ -129,6 +131,8 @@ async function _postingInteractions(app) {
     };
 
     const evaluateInteractionPoints = (interactionsPoints) => {
+        let repeatInteraction = [];
+
         //console.log(interactionsPoints);
         return new Promise(function(resolve, reject) {
             interactionsPoints.forEach(async function(element, index, array) {
@@ -197,7 +201,46 @@ async function _postingInteractions(app) {
                                 // } else {
                                 //     interactions.push(element);
                                 // }
-                                interactions.push(element);
+                                if (repeatInteraction.length === 0) {
+                                    interactions.push(element);
+                                    let interactionIdentityA =
+                                        element.identityA.personId.toString() +
+                                        element.identityB.personId.toString();
+                                    let interactionIdentifyB =
+                                        element.identityB.personId.toString() +
+                                        element.identityA.personId.toString();
+                                    repeatInteraction.push(interactionIdentityA);
+                                    repeatInteraction.push(interactionIdentifyB);
+                                } else {
+                                    if (repeatInteraction.length > 0) {
+                                        let comparableVal =
+                                            element.identityA.personId.toString() +
+                                            element.identityB.personId.toString();
+                                        let comparableVal2 =
+                                            element.identityB.personId.toString() +
+                                            element.identityA.personId.toString();
+                                        const result = repeatInteraction.filter(
+                                            (x) => comparableVal === x
+                                        );
+                                        const result2 = repeatInteraction.filter(
+                                            (x) => comparableVal2 === x
+                                        );
+                                        const finalResult = result.concat(result2);
+                                        if (finalResult.length > 0) {
+                                            //console.log(finalResult);
+                                        } else {
+                                            interactions.push(element);
+                                            let interactionIdentityA =
+                                                element.identityA.personId.toString() +
+                                                element.identityB.personId.toString();
+                                            let interactionIdentifyB =
+                                                element.identityB.personId.toString() +
+                                                element.identityA.personId.toString();
+                                            repeatInteraction.push(interactionIdentityA);
+                                            repeatInteraction.push(interactionIdentifyB);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -283,20 +326,21 @@ async function _postingInteractions(app) {
                         ) {
                             skips++;
                         } else {
-                            if (finalInteractions.length === 0) {
-                                finalInteractions.push(element1);
-                            } else {
-                                exists = finalInteractions.filter(
-                                    (x) =>
-                                    x.identityA.personId.toString() ===
-                                    element1.identityA.personId.toString() &&
-                                    x.identityB.personId.toString() ===
-                                    element1.identityB.personId.toString()
-                                );
-                                if (exists.length === 0) {
-                                    finalInteractions.push(element1);
-                                }
-                            }
+                            finalInteractions.push(element1);
+                            // if (finalInteractions.length === 0) {
+                            //     finalInteractions.push(element1);
+                            // } else {
+                            //     exists = finalInteractions.filter(
+                            //         (x) =>
+                            //         x.identityA.personId.toString() ===
+                            //         element1.identityA.personId.toString() &&
+                            //         x.identityB.personId.toString() ===
+                            //         element1.identityB.personId.toString()
+                            //     );
+                            //     if (exists.length === 0) {
+                            //         finalInteractions.push(element1);
+                            //     }
+                            // }
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
                             //resolve(interactions);
