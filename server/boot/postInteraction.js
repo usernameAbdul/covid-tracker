@@ -68,7 +68,7 @@ async function _postingInteractions(app) {
             mongoItems.forEach(function(element, index, array) {
                 findInteraction(element, mongoItems);
                 if (array.length === index + 1) {
-                    console.log(interactionsGraph.length);
+                    //console.log(interactionsGraph.length);
                     resolve(interactionsGraph);
                 }
             });
@@ -82,7 +82,7 @@ async function _postingInteractions(app) {
                 let roundElement2 = Math.round(element2.lat);
                 let roundElement = Math.round(element.lat);
                 if (roundElement === roundElement2) {
-                    // console.log('lats are the same');
+                    // //console.log('lats are the same');
                     //this needs to change to matching lat and long by rounding it. Waiting for DB to contain data 5 decimal places value.
                     interactionsGraph.push(element);
                 } else {
@@ -101,26 +101,26 @@ async function _postingInteractions(app) {
                     lon: interactionsGraph[index + 1].lng,
                 }, { exact: true, unit: 'meter' });
                 if (dist < 4) {
-                    //console.log('close proximity achieved');
-                    //console.log(element.personId)
-                    //console.log(interactionsGraph[index + 1].personId)
+                    ////console.log('close proximity achieved');
+                    ////console.log(element.personId)
+                    ////console.log(interactionsGraph[index + 1].personId)
                     if (element.personId === interactionsGraph[index + 1].personId) {
-                        console.log('skip for same person');
+                        //console.log('skip for same person');
                     } else {
                         var interimInteractionObject = {
                             identityA: element,
                             identityB: interactionsGraph[index + 1],
                             dist: dist,
                         };
-                        //console.log(interimInteractionObject);
-                        //console.log(interimInteractionObject);
+                        ////console.log(interimInteractionObject);
+                        ////console.log(interimInteractionObject);
                         interactionsPoints.push(interimInteractionObject);
                     }
                 }
-                // console.log(array.length);
-                // console.log(index + 2);
+                // //console.log(array.length);
+                // //console.log(index + 2);
                 if (array.length === index + 2) {
-                    console.log(interactionsPoints.length, 'interactionsPoints');
+                    //console.log(interactionsPoints.length, 'interactionsPoints');
 
                     resolve(interactionsPoints);
                 }
@@ -129,35 +129,35 @@ async function _postingInteractions(app) {
     };
 
     const evaluateInteractionPoints = (interactionsPoints) => {
-        console.log(interactionsPoints);
+        //console.log(interactionsPoints);
         return new Promise(function(resolve, reject) {
             interactionsPoints.forEach(async function(element, index, array) {
                 let roundAltitude1 = Math.round(element.identityA.altitude);
                 let roundAltitude2 = Math.round(element.identityB.altitude);
                 if (roundAltitude1 === roundAltitude2) {
-                    console.log('---------------------------------------');
-                    console.log('altitude is same');
-                    console.log('Matching startTime');
+                    //console.log('---------------------------------------');
+                    //console.log('altitude is same');
+                    //console.log('Matching startTime');
                     if (element.identityA.startTime <= element.identityB.startTime) {
-                        console.log('startTime matched');
-                        console.log(
-                            element.identityA.startTime + '<' + element.identityB.startTime
-                        );
+                        //console.log('startTime matched');
+                        //console.log(
+                        //     element.identityA.startTime + '<' + element.identityB.startTime
+                        // );
 
-                        console.log('Matching endTime');
-                        console.log(
-                            element.identityA.endTime + '>' + element.identityB.endTime
-                        );
+                        //console.log('Matching endTime');
+                        //console.log(
+                        //     element.identityA.endTime + '>' + element.identityB.endTime
+                        // );
                         if (element.identityA.endTime >= element.identityB.endTime) {
-                            console.log(' endTime matched');
+                            //console.log(' endTime matched');
 
                             if (
                                 element.identityA.personId.toString() !==
                                 element.identityB.personId.toString()
                             ) {
-                                console.log(element.identityA.personId.toString());
-                                console.log('===');
-                                console.log(element.identityB.personId.toString());
+                                //console.log(element.identityA.personId.toString());
+                                //console.log('===');
+                                //console.log(element.identityB.personId.toString());
                                 // let today = new Date();
                                 // const todaysInteractions = await app.models.Interaction.find({
                                 //     where: {
@@ -202,14 +202,17 @@ async function _postingInteractions(app) {
                         }
                     }
 
-                    // console.log(element.identityA.startTime - element.identityB.startTime)
+                    // //console.log(element.identityA.startTime - element.identityB.startTime)
                     // let fragment = element.identityA.startTime
-                    // console.log(fragment)
+                    // //console.log(fragment)
                     //add code to push these items to interactions
                     //Interactions format: IdentityA, identityB
                 }
                 if (array.length === index + 1) {
-                    console.log(interactions.length);
+                    console.log(
+                        'after evaluating interaction points we hav a total of ',
+                        interactions.length
+                    );
                     resolve(interactions);
                 }
             });
@@ -239,10 +242,10 @@ async function _postingInteractions(app) {
     });
 
     const removeExistingInteractions = (interactions) => {
-        console.log(typeof interactions);
+        //console.log(typeof interactions);
         return new Promise(async function(resolve, reject) {
-            console.log('inside removeExisting Interactions');
-            console.log(interactions.length);
+            //console.log('inside removeExisting Interactions');
+            //console.log(interactions.length);
             let today = new Date();
             const todaysInteractions = await app.models.Interaction.find({
                 where: {
@@ -251,30 +254,31 @@ async function _postingInteractions(app) {
                     },
                 },
             });
+            console.log('todays Interactions ', todaysInteractions);
             if (todaysInteractions.length === 0) {
                 resolve(interactions);
             } else {
                 let finalInteractions = [];
-                console.log('here');
+                //console.log('here');
                 todaysInteractions.forEach(function(element, index, array) {
-                    console.log('pizza');
-                    console.log(interactions);
+                    //console.log('pizza');
+                    //console.log(interactions);
                     interactions.forEach(function(element1, index1, array1) {
-                        console.log('here2');
+                        //console.log('here2');
                         if (
                             element1.identityA.personId.toString() ===
                             element.identityA.personId.toString() &&
                             element1.identityB.personId.toString() ===
                             element.identityB.personId.toString()
                         ) {
-                            console.log('interaction already exists');
+                            console.log('if A===A && B===B');
                         } else if (
                             element1.identityA.personId.toString() ===
                             element.identityB.personId.toString() &&
                             element1.identityB.personId.toString() ===
                             element.identityA.personId.toString()
                         ) {
-                            console.log('interaction already exists');
+                            console.log('If A===B && B===A');
                         } else {
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
