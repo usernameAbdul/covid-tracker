@@ -254,7 +254,7 @@ async function _postingInteractions(app) {
                     },
                 },
             });
-            console.log('todays Interactions ', todaysInteractions);
+            console.log('todays Interactions ', todaysInteractions.length);
             if (todaysInteractions.length === 0) {
                 resolve(interactions);
             } else {
