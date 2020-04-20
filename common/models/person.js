@@ -110,9 +110,9 @@ module.exports = function(Person) {
                 body.location.map((loc) => _createLedger(loc, PersonInstance.id))
             );
 
-            const newPerson = await PersonInstance.updateAttributes({
-                location: location,
-            });
+            // const newPerson = await PersonInstance.updateAttributes({
+            //     location: location,
+            // });
 
             return 'Location Updated';
         } catch (error) {
