@@ -2,9 +2,9 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
-    cron.schedule('*/2 * * * *', function() {
-        _postingInteractions(app);
-    });
+    // cron.schedule('*/2 * * * *', function() {
+    //     _postingInteractions(app);
+    // });
 };
 
 async function _postingInteractions(app) {
@@ -259,7 +259,8 @@ async function _postingInteractions(app) {
                 resolve(interactions);
             } else {
                 let finalInteractions = [];
-                let exists;
+                let existsA;
+                let existsB;
                 let skips = 0;
                 //console.log('here');
                 todaysInteractions.forEach(function(element, index, array) {
