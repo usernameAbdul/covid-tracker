@@ -284,20 +284,9 @@ async function _postingInteractions(app) {
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
                             //resolve(interactions);
-                            if (finalInteractions.length === 0) {
+                            if (!finalInteractions.includes(element1)) {
+                                console.log('item pushed in final array');
                                 finalInteractions.push(element1);
-                            } else {
-                                exists = finalInteractions.filter(
-                                    (x) =>
-                                    x.identityA.personId.toString() ===
-                                    element1.identityA.personId.toString() &&
-                                    x.identityB.personId.toString() ===
-                                    element1.identityB.personId.toString()
-                                );
-                                if (exists.length === 0) {
-                                    console.log('item pushed in final array');
-                                    finalInteractions.push(element1);
-                                }
                             }
 
                             //     }
