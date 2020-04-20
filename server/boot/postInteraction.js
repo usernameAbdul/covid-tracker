@@ -259,6 +259,7 @@ async function _postingInteractions(app) {
                 resolve(interactions);
             } else {
                 let finalInteractions = [];
+                let exists;
                 let skips = 0;
                 //console.log('here');
                 todaysInteractions.forEach(function(element, index, array) {
@@ -281,13 +282,28 @@ async function _postingInteractions(app) {
                         ) {
                             skips++;
                         } else {
+                            if (finalInteractions.length === 0) {
+                                finalInteractions.push(element1);
+                            } else {
+                                exists = finalInteractions.filter(
+                                    (x) =>
+                                    x.identityA.personId.toString() ===
+                                    element1.identityA.personId.toString() &&
+                                    x.identityB.personId.toString() ===
+                                    element1.identityB.personId.toString()
+                                );
+                                if (exists.length === 0) {
+                                    finalInteractions.push(element1);
+                                }
+                            }
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
                             //resolve(interactions);
-                            if (!finalInteractions.includes(element1)) {
-                                console.log('item pushed in final array');
-                                finalInteractions.push(element1);
-                            }
+
+                            // if (!finalInteractions.includes(element1)) {
+                            //     console.log('item pushed in final array');
+                            //     finalInteractions.push(element1);
+                            // }
 
                             //     }
                             // }
