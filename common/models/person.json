@@ -1,162 +1,137 @@
 {
-  "name": "Person",
-  "base": "User",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "name": {
-      "type": "string",
-      "required": true
+    "name": "Person",
+    "base": "User",
+    "idInjection": true,
+    "options": {
+        "validateUpsert": true
     },
-    "phone": {
-      "type": "string",
-      "required": true
+    "properties": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "phone": {
+            "type": "string",
+            "required": true
+        },
+        "location": {
+            "type": ["object"],
+            "required": false
+        },
+        "symptoms": {
+            "type": ["object"],
+            "required": false
+        }
     },
-    "location": {
-      "type": [
-        "object"
-      ],
-      "required": false
-    },
-    "symptoms": {
-      "type": [
-        "object"
-      ],
-      "required": false
+    "validations": [],
+    "relations": {},
+    "acls": [{
+            "accessType": "*",
+            "principalType": "ROLE",
+            "principalId": "superUser",
+            "permission": "ALLOW"
+        },
+        {
+            "accessType": "EXECUTE",
+            "principalType": "ROLE",
+            "principalId": "$authenticated",
+            "permission": "ALLOW",
+            "property": "updatePerson"
+        },
+        {
+            "accessType": "EXECUTE",
+            "principalType": "ROLE",
+            "principalId": "$authenticated",
+            "permission": "ALLOW",
+            "property": "getPersonSymptoms"
+        },
+        {
+            "accessType": "EXECUTE",
+            "principalType": "ROLE",
+            "principalId": "$authenticated",
+            "permission": "ALLOW",
+            "property": "postPersonSymptoms"
+        },
+        {
+            "accessType": "EXECUTE",
+            "principalType": "ROLE",
+            "principalId": "$authenticated",
+            "permission": "ALLOW",
+            "property": "getInteractions"
+        }
+    ],
+    "methods": {
+        "prototype.updatePerson": {
+            "accepts": [{
+                "arg": "body",
+                "type": "object",
+                "required": true,
+                "description": "",
+                "http": {
+                    "source": "body"
+                }
+            }],
+            "returns": [{
+                "arg": "body",
+                "type": "object",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/update-location",
+                "verb": "post"
+            }]
+        },
+        "prototype.getPersonSymptoms": {
+            "accepts": [],
+            "returns": [{
+                "arg": "symptoms",
+                "type": "array",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/get-symptoms",
+                "verb": "get"
+            }]
+        },
+        "prototype.postPersonSymptoms": {
+            "accepts": [{
+                "arg": "body",
+                "type": "object",
+                "required": false,
+                "description": "",
+                "http": {
+                    "source": "body"
+                }
+            }],
+            "returns": [{
+                "arg": "body",
+                "type": "object",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/post-symptoms",
+                "verb": "post"
+            }]
+        },
+        "prototype.getInteractions": {
+            "accepts": [],
+            "returns": [{
+                "arg": "interactions",
+                "type": "array",
+                "root": true,
+                "description": ""
+            }],
+            "description": "",
+            "http": [{
+                "path": "/get-interactions",
+                "verb": "get"
+            }]
+        }
     }
-  },
-  "validations": [],
-  "relations": {},
-  "acls": [
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "superUser",
-      "permission": "ALLOW"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "updatePerson"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "getPersonSymptoms"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "postPersonSymptoms"
-    },
-    {
-      "accessType": "EXECUTE",
-      "principalType": "ROLE",
-      "principalId": "$authenticated",
-      "permission": "ALLOW",
-      "property": "getInteractions"
-    }
-  ],
-  "methods": {
-    "prototype.updatePerson": {
-      "accepts": [
-        {
-          "arg": "body",
-          "type": "object",
-          "required": true,
-          "description": "",
-          "http": {
-            "source": "body"
-          }
-        }
-      ],
-      "returns": [
-        {
-          "arg": "body",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/update-person",
-          "verb": "post"
-        }
-      ]
-    },
-    "prototype.getPersonSymptoms": {
-      "accepts": [],
-      "returns": [
-        {
-          "arg": "symptoms",
-          "type": "array",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/get-symptoms",
-          "verb": "get"
-        }
-      ]
-    },
-    "prototype.postPersonSymptoms": {
-      "accepts": [
-        {
-          "arg": "body",
-          "type": "object",
-          "required": false,
-          "description": "",
-          "http": {
-            "source": "body"
-          }
-        }
-      ],
-      "returns": [
-        {
-          "arg": "body",
-          "type": "object",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/post-symptoms",
-          "verb": "post"
-        }
-      ]
-    },
-    "prototype.getInteractions": {
-      "accepts": [],
-      "returns": [
-        {
-          "arg": "interactions",
-          "type": "array",
-          "root": true,
-          "description": ""
-        }
-      ],
-      "description": "",
-      "http": [
-        {
-          "path": "/get-interactions",
-          "verb": "get"
-        }
-      ]
-    }
-  }
 }
