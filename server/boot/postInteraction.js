@@ -280,6 +280,7 @@ async function _postingInteractions(app) {
                         ) {
                             console.log('If A===B && B===A');
                         } else {
+                            console.log(finalInteractions.length);
                             // if (index1 + 1 === array1.length) {
                             //     if (index + 1 === array.length) {
                             //resolve(interactions);
