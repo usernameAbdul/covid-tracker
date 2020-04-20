@@ -251,6 +251,7 @@ async function _postingInteractions(app) {
             if (todaysInteractions.length === 0) {
                 resolve(interactions);
             } else {
+                let finalInteractions = [];
                 console.log('here');
                 todaysInteractions.forEach(function(element, index, array) {
                     console.log('pizza');
@@ -274,13 +275,15 @@ async function _postingInteractions(app) {
                         } else {
                             if (index1 + 1 === array1.length) {
                                 if (index + 1 === array.length) {
-                                    resolve(interactions);
+                                    //resolve(interactions);
+                                    finalInteractions.push(element1);
                                 }
                             }
                         }
                     });
                 });
-                //resolve(interactions)
+
+                resolve(finalInteractions);
             }
         });
     };
