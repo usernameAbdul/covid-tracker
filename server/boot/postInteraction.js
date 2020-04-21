@@ -2,9 +2,9 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
-    // cron.schedule('*/1 * * * *', function() {
-    //     _postingInteractions(app);
-    // });
+    cron.schedule('*/1 * * * *', function() {
+        _postingInteractions(app);
+    });
 };
 
 async function _postingInteractions(app) {
@@ -37,7 +37,7 @@ async function _postingInteractions(app) {
                 //     .sort({
                 //         endTime: -1.0,
                 //     })
-                //     .limit(400);
+                //     .limit(10000);
                 if (lastJob.length === 0) {
                     cursor = db.collection('Ledger').find({});
                 } else {
@@ -274,7 +274,7 @@ async function _postingInteractions(app) {
             const cronJobLog = await app.models.CronJobLog.create({
                 numberOfInteractions: interactions.length,
             });
-            console.log(cronJobLog);
+            //console.log(cronJobLog);
         });
     };
     const lastJob = await app.models.CronJobLog.find({
@@ -300,84 +300,50 @@ async function _postingInteractions(app) {
                 resolve(interactions);
             } else {
                 let finalInteractions = [];
-                let existsA;
-                let existsB;
                 let skips = 0;
-                //console.log('here');
-                console.log(interactions, '<----------');
+                console.log(interactions, '<--------------------------');
                 interactions.forEach(function(element, index, array) {
-                    //console.log('pizza');
-                    //console.log(interactions);
+                    let match = 'false';
+                    console.log('doing loop: ' + index);
+                    let case1 =
+                        element.identityA.personId.toString() +
+                        element.identityB.personId.toString();
+                    let case2 =
+                        element.identityB.personId.toString() +
+                        element.identityA.personId.toString();
                     todaysInteractions.forEach(function(element1, index1, array1) {
-                        console.log('here2');
-
-                        if (
-                            element.identityA.personId.toString() ===
-                            element1.identityA.personId.toString() &&
-                            element.identityB.personId.toString() !==
-                            element1.identityB.personId.toString()
-                        ) {
-                            //push interaction
-
-                            finalInteractions.push(element);
-                        } else if (
-                            element.identityA.personId.toString() !==
-                            element1.identityA.personId.toString() &&
-                            element.identityB.personId.toString() ===
-                            element1.identityB.personId.toString()
-                        ) {
-                            //push interaction
-                            finalInteractions.push(element);
-                        } else if (
-                            element.identityA.personId.toString() ===
-                            element1.identityB.personId.toString() &&
-                            element.identityB.personId.toString() !==
-                            element1.identityA.personId.toString()
-                        ) {
-                            //push interaction
-                            finalInteractions.push(element);
-                        } else if (
-                            element.identityB.personId.toString() ===
-                            element1.identityA.personId.toString() &&
-                            element.identityA.personId.toString() !==
-                            element1.identityB.personId.toString()
-                        ) {
-                            //push interaction
-                            finalInteractions.push(element);
+                        let checkCase1 =
+                            element1.identityA.personId.toString() +
+                            element1.identityB.personId.toString();
+                        let checkCase2 =
+                            element1.identityB.personId.toString() +
+                            element1.identityA.personId.toString();
+                        if (case1 === checkCase1) {
+                            console.log('case1');
+                            match = 'true';
+                        } else if (case1 === checkCase2) {
+                            console.log('case2');
+                            match = 'true';
+                        } else if (case2 === checkCase1) {
+                            console.log('case3');
+                            match = 'true';
+                        } else if (case2 === checkCase2) {
+                            console.log('case4');
+                            match = 'true';
                         } else {
-                            console.log('-----------------------');
-                            console.log(element1);
-                            console.log(element);
+                            if (index1 + 1 === array1.length) {
+                                console.log(match);
+                                if (match === 'false') {
+                                    console.log('adding an interaction to the table');
+                                    finalInteractions.push(element);
+                                }
+                            }
                         }
-                        // if (
-                        //     element1.identityA.personId.toString() ===
-                        //     element.identityA.personId.toString() &&
-                        //     element1.identityB.personId.toString() ===
-                        //     element.identityB.personId.toString()
-                        // ) {
-                        //     skips++;
-                        // } else if (
-                        //     element1.identityA.personId.toString() ===
-                        //     element.identityB.personId.toString() &&
-                        //     element1.identityB.personId.toString() ===
-                        //     element.identityA.personId.toString()
-                        // ) {
-                        //     skips++;
-                        // }else if(  element1.identityA.personId.toString() !==
-                        // element.identityA.personId.toString() &&
-                        // element1.identityB.personId.toString() !==
-                        // element.identityB.personId.toString()){
-                        //     skips++;
-                        // }
-                        //  else {
-                        //     console.log(element1);
-                        //     finalInteractions.push(element);
-
-                        // }
                     });
                 });
                 console.log('total skips', skips);
-                console.log('final interactions', finalInteractions.length);
+                //console.log('final interactions', finalInteractions.length);
+                console.log(finalInteractions.length);
                 resolve(finalInteractions);
             }
         });
