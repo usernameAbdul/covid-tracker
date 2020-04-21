@@ -2,6 +2,7 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
+
     cron.schedule('*/1 * * * *', function() {
         _postingInteractions(app);
     });
@@ -100,7 +101,7 @@ async function _postingInteractions(app) {
                     lat: interactionsGraph[index + 1].lat,
                     lon: interactionsGraph[index + 1].lng,
                 }, { exact: true, unit: 'meter' });
-                if (dist < 4) {
+                if (dist < 6) {
                     ////console.log('close proximity achieved');
                     ////console.log(element.personId)
                     ////console.log(interactionsGraph[index + 1].personId)
@@ -121,7 +122,7 @@ async function _postingInteractions(app) {
                 // //console.log(index + 2);
                 if (array.length === index + 2) {
                     //console.log(interactionsPoints.length, 'interactionsPoints');
-
+                    console.log('--------->>>>>>>>> interaction points: ' + interactionsPoints.length)
                     resolve(interactionsPoints);
                 }
             });
@@ -136,11 +137,11 @@ async function _postingInteractions(app) {
             interactionsPoints.forEach(async function(element, index, array) {
                 let roundAltitude1 = Math.round(element.identityA.altitude);
                 let roundAltitude2 = Math.round(element.identityB.altitude);
-                if (roundAltitude1 === roundAltitude2) {
-                    //console.log('---------------------------------------');
+                if (roundAltitude1 + 2 === roundAltitude2 || roundAltitude1 - 2 === roundAltitude2 || roundAltitude1 + 1 === roundAltitude2 || roundAltitude1 - 1 === roundAltitude2) {
+                    console.log('---------------------------------------');
                     //console.log('altitude is same');
                     //console.log('Matching startTime');
-                    if (element.identityA.startTime <= element.identityB.startTime) {
+                    if (element.identityA.startTime <= element.identityB.startTime || element.identityB.startTime <= element.identityA.startTime) {
                         //console.log('startTime matched');
                         //console.log(
                         //     element.identityA.startTime + '<' + element.identityB.startTime
@@ -150,8 +151,8 @@ async function _postingInteractions(app) {
                         //console.log(
                         //     element.identityA.endTime + '>' + element.identityB.endTime
                         // );
-                        if (element.identityA.endTime >= element.identityB.endTime) {
-                            //console.log(' endTime matched');
+                        if (element.identityA.endTime >= element.identityB.endTime || element.identityB.endTime >= element.identityA.endTime) {
+                            console.log(' endTime matched');
 
                             if (
                                 element.identityA.personId.toString() !==
@@ -301,41 +302,33 @@ async function _postingInteractions(app) {
             } else {
                 let finalInteractions = [];
                 let skips = 0;
-                console.log(interactions, '<--------------------------');
+                //console.log(interactions, '<--------------------------');
                 interactions.forEach(function(element, index, array) {
-                    let match = 'false';
-                    console.log('doing loop: ' + index);
-                    let case1 =
-                        element.identityA.personId.toString() +
-                        element.identityB.personId.toString();
-                    let case2 =
-                        element.identityB.personId.toString() +
-                        element.identityA.personId.toString();
+                    let match = 'false'
+                    console.log('doing loop: ' + index)
+                    let case1 = element.identityA.personId.toString() + element.identityB.personId.toString()
+                    let case2 = element.identityB.personId.toString() + element.identityA.personId.toString()
                     todaysInteractions.forEach(function(element1, index1, array1) {
-                        let checkCase1 =
-                            element1.identityA.personId.toString() +
-                            element1.identityB.personId.toString();
-                        let checkCase2 =
-                            element1.identityB.personId.toString() +
-                            element1.identityA.personId.toString();
+                        let checkCase1 = element1.identityA.personId.toString() + element1.identityB.personId.toString()
+                        let checkCase2 = element1.identityB.personId.toString() + element1.identityA.personId.toString()
                         if (case1 === checkCase1) {
-                            console.log('case1');
-                            match = 'true';
+                            console.log('case1')
+                            match = 'true'
                         } else if (case1 === checkCase2) {
-                            console.log('case2');
-                            match = 'true';
+                            console.log('case2')
+                            match = 'true'
                         } else if (case2 === checkCase1) {
-                            console.log('case3');
-                            match = 'true';
+                            console.log('case3')
+                            match = 'true'
                         } else if (case2 === checkCase2) {
-                            console.log('case4');
-                            match = 'true';
+                            console.log('case4')
+                            match = 'true'
                         } else {
                             if (index1 + 1 === array1.length) {
-                                console.log(match);
+                                console.log(match)
                                 if (match === 'false') {
-                                    console.log('adding an interaction to the table');
-                                    finalInteractions.push(element);
+                                    console.log('adding an interaction to the table')
+                                    finalInteractions.push(element)
                                 }
                             }
                         }
@@ -343,7 +336,7 @@ async function _postingInteractions(app) {
                 });
                 console.log('total skips', skips);
                 //console.log('final interactions', finalInteractions.length);
-                console.log(finalInteractions.length);
+                console.log(finalInteractions.length)
                 resolve(finalInteractions);
             }
         });
@@ -357,4 +350,3 @@ async function _postingInteractions(app) {
         .then((interactionsPoints) => evaluateInteractionPoints(interactionsPoints))
         .then((interactions) => removeExistingInteractions(interactions))
         .then((interactions) => addtoInteractionsTable(interactions));
-}
