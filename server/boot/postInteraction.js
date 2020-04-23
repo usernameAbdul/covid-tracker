@@ -2,7 +2,6 @@
 const cron = require('node-cron');
 const moment = require('moment');
 module.exports = function(app) {
-
     cron.schedule('*/1 * * * *', function() {
         _postingInteractions(app);
     });
@@ -42,9 +41,9 @@ async function _postingInteractions(app) {
                 if (lastJob.length === 0) {
                     cursor = db.collection('Ledger').find({});
                 } else {
-                    cursor = db
-                        .collection('Ledger')
-                        .find({ endTime: { $gte: lastJob[0].createdAt } });
+                    cursor = db.collection('Ledger').find({
+                        endTime: { $gte: moment().subtract(3, 'minutes').toISOString() },
+                    });
                 }
 
                 function iterateFunc(doc) {
@@ -122,7 +121,10 @@ async function _postingInteractions(app) {
                 // //console.log(index + 2);
                 if (array.length === index + 2) {
                     //console.log(interactionsPoints.length, 'interactionsPoints');
-                    console.log('--------->>>>>>>>> interaction points: ' + interactionsPoints.length)
+                    console.log(
+                        '--------->>>>>>>>> interaction points: ' +
+                        interactionsPoints.length
+                    );
                     resolve(interactionsPoints);
                 }
             });
@@ -137,11 +139,19 @@ async function _postingInteractions(app) {
             interactionsPoints.forEach(async function(element, index, array) {
                 let roundAltitude1 = Math.round(element.identityA.altitude);
                 let roundAltitude2 = Math.round(element.identityB.altitude);
-                if (roundAltitude1 + 2 === roundAltitude2 || roundAltitude1 - 2 === roundAltitude2 || roundAltitude1 + 1 === roundAltitude2 || roundAltitude1 - 1 === roundAltitude2) {
+                if (
+                    roundAltitude1 + 2 === roundAltitude2 ||
+                    roundAltitude1 - 2 === roundAltitude2 ||
+                    roundAltitude1 + 1 === roundAltitude2 ||
+                    roundAltitude1 - 1 === roundAltitude2
+                ) {
                     console.log('---------------------------------------');
                     //console.log('altitude is same');
                     //console.log('Matching startTime');
-                    if (element.identityA.startTime <= element.identityB.startTime || element.identityB.startTime <= element.identityA.startTime) {
+                    if (
+                        element.identityA.startTime <= element.identityB.startTime ||
+                        element.identityB.startTime <= element.identityA.startTime
+                    ) {
                         //console.log('startTime matched');
                         //console.log(
                         //     element.identityA.startTime + '<' + element.identityB.startTime
@@ -151,7 +161,10 @@ async function _postingInteractions(app) {
                         //console.log(
                         //     element.identityA.endTime + '>' + element.identityB.endTime
                         // );
-                        if (element.identityA.endTime >= element.identityB.endTime || element.identityB.endTime >= element.identityA.endTime) {
+                        if (
+                            element.identityA.endTime >= element.identityB.endTime ||
+                            element.identityB.endTime >= element.identityA.endTime
+                        ) {
                             console.log(' endTime matched');
 
                             if (
@@ -304,31 +317,39 @@ async function _postingInteractions(app) {
                 let skips = 0;
                 //console.log(interactions, '<--------------------------');
                 interactions.forEach(function(element, index, array) {
-                    let match = 'false'
-                    console.log('doing loop: ' + index)
-                    let case1 = element.identityA.personId.toString() + element.identityB.personId.toString()
-                    let case2 = element.identityB.personId.toString() + element.identityA.personId.toString()
+                    let match = 'false';
+                    console.log('doing loop: ' + index);
+                    let case1 =
+                        element.identityA.personId.toString() +
+                        element.identityB.personId.toString();
+                    let case2 =
+                        element.identityB.personId.toString() +
+                        element.identityA.personId.toString();
                     todaysInteractions.forEach(function(element1, index1, array1) {
-                        let checkCase1 = element1.identityA.personId.toString() + element1.identityB.personId.toString()
-                        let checkCase2 = element1.identityB.personId.toString() + element1.identityA.personId.toString()
+                        let checkCase1 =
+                            element1.identityA.personId.toString() +
+                            element1.identityB.personId.toString();
+                        let checkCase2 =
+                            element1.identityB.personId.toString() +
+                            element1.identityA.personId.toString();
                         if (case1 === checkCase1) {
-                            console.log('case1')
-                            match = 'true'
+                            console.log('case1');
+                            match = 'true';
                         } else if (case1 === checkCase2) {
-                            console.log('case2')
-                            match = 'true'
+                            console.log('case2');
+                            match = 'true';
                         } else if (case2 === checkCase1) {
-                            console.log('case3')
-                            match = 'true'
+                            console.log('case3');
+                            match = 'true';
                         } else if (case2 === checkCase2) {
-                            console.log('case4')
-                            match = 'true'
+                            console.log('case4');
+                            match = 'true';
                         } else {
                             if (index1 + 1 === array1.length) {
-                                console.log(match)
+                                console.log(match);
                                 if (match === 'false') {
-                                    console.log('adding an interaction to the table')
-                                    finalInteractions.push(element)
+                                    console.log('adding an interaction to the table');
+                                    finalInteractions.push(element);
                                 }
                             }
                         }
@@ -336,7 +357,7 @@ async function _postingInteractions(app) {
                 });
                 console.log('total skips', skips);
                 //console.log('final interactions', finalInteractions.length);
-                console.log(finalInteractions.length)
+                console.log(finalInteractions.length);
                 resolve(finalInteractions);
             }
         });
@@ -350,3 +371,4 @@ async function _postingInteractions(app) {
         .then((interactionsPoints) => evaluateInteractionPoints(interactionsPoints))
         .then((interactions) => removeExistingInteractions(interactions))
         .then((interactions) => addtoInteractionsTable(interactions));
+}
