@@ -42,7 +42,9 @@ async function _postingInteractions(app) {
                     cursor = db.collection('Ledger').find({});
                 } else {
                     cursor = db.collection('Ledger').find({
-                        endTime: { $gte: moment().subtract(3, 'minutes').toISOString() },
+                        endTime: {
+                            $gte: moment(new Date()).subtract(3, 'minutes').toISOString(),
+                        },
                     });
                     let ledgers = await cursor.toArray();
                     console.log(ledgers.length, 'ledger length');
