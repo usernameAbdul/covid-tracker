@@ -48,7 +48,12 @@ async function _postingInteractions(app) {
                             $gte: then,
                         },
                     });
-                    let ledgers = await cursor.toArray();
+
+                    let ledgers = await app.models['Ledger'].find({
+                        where: {
+                            endTime: { gte: then },
+                        },
+                    });
                     console.log(moment(now).format('MMM DD h:mm A'), 'right now');
                     console.log(
                         '3 mins before',
