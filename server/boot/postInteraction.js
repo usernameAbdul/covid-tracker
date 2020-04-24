@@ -49,7 +49,7 @@ async function _postingInteractions(app) {
                         },
                     });
                     let ledgers = await cursor.toArray();
-                    console.log(now, 'right now');
+                    console.log(moment(now).format('MMM DD h:mm A'), 'right now');
                     console.log(
                         '3 mins before',
                         moment(now).subtract(3, 'minutes').format('MMM DD h:mm A')
