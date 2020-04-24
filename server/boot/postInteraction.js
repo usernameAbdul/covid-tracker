@@ -45,7 +45,7 @@ async function _postingInteractions(app) {
                         endTime: { $gte: moment().subtract(3, 'minutes').toISOString() },
                     });
                     let ledgers = await cursor.toArray();
-                    console.log(ledgers.length);
+                    console.log(ledgers.length, 'ledger length');
                 }
 
                 function iterateFunc(doc) {
