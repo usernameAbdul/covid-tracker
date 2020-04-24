@@ -49,7 +49,9 @@ async function _postingInteractions(app) {
                         },
                     });
                     let ledgers = await cursor.toArray();
-                    console.log(moment(now).subtract(3, 'minutes').toDate());
+                    console.log(
+                        moment(now).subtract(3, 'minutes').format('MMM DD h:mm A')
+                    );
                     console.log(ledgers.length, 'ledger length');
                 }
 
