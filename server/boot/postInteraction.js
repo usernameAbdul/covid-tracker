@@ -41,23 +41,13 @@ async function _postingInteractions(app) {
                 if (lastJob.length === 0) {
                     cursor = db.collection('Ledger').find({});
                 } else {
-                    //   cursor = db.collection('Ledger').find({
-                    //     endTime: {
-                    //       $gte: then,
-                    //     },
-                    //   });
                     let now = new Date();
                     let then = moment(now).subtract(3, 'minutes').toISOString();
-                    cursor = app.models['Ledger'].find({
-                        where: {
-                            endTime: { gte: then },
+                    cursor = db.collection('Ledger').find({
+                        endTime: {
+                            $gte: then,
                         },
                     });
-                    console.log(moment(now).format('MMM DD h:mm A'), 'right now');
-                    console.log(
-                        '3 mins before',
-                        moment(now).subtract(3, 'minutes').format('MMM DD h:mm A')
-                    );
                 }
 
                 function iterateFunc(doc) {
