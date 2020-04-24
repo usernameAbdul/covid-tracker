@@ -144,6 +144,7 @@ async function _postingInteractions(app) {
                 let roundAltitude1 = Math.round(element.identityA.altitude);
                 let roundAltitude2 = Math.round(element.identityB.altitude);
                 if (
+                    roundAltitude1 ||
                     roundAltitude1 + 2 === roundAltitude2 ||
                     roundAltitude1 - 2 === roundAltitude2 ||
                     roundAltitude1 + 1 === roundAltitude2 ||
