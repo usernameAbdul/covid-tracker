@@ -41,12 +41,14 @@ async function _postingInteractions(app) {
                 if (lastJob.length === 0) {
                     cursor = db.collection('Ledger').find({});
                 } else {
+                    let threeMinsBefore = moment(new Date()).subtract(3, 'minutes');
                     cursor = db.collection('Ledger').find({
                         endTime: {
-                            $gte: moment(new Date()).subtract(3, 'minutes').toISOString(),
+                            $gte: threeMinsBefore.toISOString(),
                         },
                     });
                     let ledgers = await cursor.toArray();
+                    console.log(threeMinsBefore.format('MMM DD h:mm A'));
                     console.log(ledgers.length, 'ledger length');
                 }
 
