@@ -31,24 +31,24 @@ async function _postingInteractions(app) {
             MongoClient.connect(url, async function(err, client) {
                 const db = client.db('test');
                 var cursor;
-                // cursor = db
-                //     .collection('Ledger')
-                //     .find({})
-                //     .sort({
-                //         endTime: -1.0,
-                //     })
-                //     .limit(10000);
-                if (lastJob.length === 0) {
-                    cursor = db.collection('Ledger').find({});
-                } else {
-                    let now = new Date();
-                    let then = moment(now).subtract(3, 'minutes').toISOString();
-                    cursor = db.collection('Ledger').find({
-                        endTime: {
-                            $gte: then,
-                        },
-                    });
-                }
+                cursor = db
+                    .collection('Ledger')
+                    .find({})
+                    .sort({
+                        endTime: -1.0,
+                    })
+                    .limit(10000);
+                // if (lastJob.length === 0) {
+                //     cursor = db.collection('Ledger').find({});
+                // } else {
+                //     let now = new Date();
+                //     let then = moment(now).subtract(3, 'minutes').toISOString();
+                //     cursor = db.collection('Ledger').find({
+                //         endTime: {
+                //             $gte: then,
+                //         },
+                //     });
+                // }
 
                 function iterateFunc(doc) {
                     mongoitems.push(doc);
