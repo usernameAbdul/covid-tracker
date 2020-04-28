@@ -69,7 +69,7 @@ module.exports = function(Person) {
         try {
             var error = [];
             var PersonInstance = this;
-            var location = PersonInstance.location;
+            var location = [];
             if (!body.location) {
                 throw Error('Wrong request body discription');
             }
@@ -103,16 +103,11 @@ module.exports = function(Person) {
                 error.join();
                 throw error;
             }
-            //personal note : still have to figure -->loc['syncToLedger'] = true;
-            //creating ledgers
+
             console.log('check if works===>', PersonInstance.id);
             await Promise.all(
                 body.location.map((loc) => _createLedger(loc, PersonInstance.id))
             );
-
-            // const newPerson = await PersonInstance.updateAttributes({
-            //     location: location,
-            // });
 
             return 'Location Updated';
         } catch (error) {
