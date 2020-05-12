@@ -1,8 +1,41 @@
 'use strict';
 const lbApp = require('../../server/server');
 const moment = require('moment');
+const ejs = require('ejs');
+const path = require('path');
 module.exports = function(Person) {
     Person.validatesUniquenessOf('phone');
+    Person.on('resetPasswordRequest', async function(info) {
+        console.log('Password reset');
+        const templateData = {
+            recoverLink: `https://covid-track.devbeans.io?token=${info.accessToken.id}`,
+        };
+        try {
+            console.log('aaa');
+            // load html template by passing in the variables
+            const template = await ejs
+                .renderFile(
+                    path.resolve('common', 'ejs-views', 'reset-password.ejs'),
+                    templateData
+                )
+                .catch((e) => {
+                    console.log(e);
+                    //! no need to throw error as this function ran via event listener. Throwing error wont have any effect
+                });
+            console.log(`TCL: template`, template);
+            console.log(info.email)
+            const emailSend = await lbApp.models.Email.send({
+                to: info.email,
+                from: 'noreply@covidtrack.io',
+                subject: 'Password Reset Request',
+                html: template
+            });
+            console.log(emailSend, 'hi');
+        } catch (error) {
+            console.log(error);
+            //! no need to throw error as this function ran via event listener. Throwing error wont have any effect
+        }
+    });
     Person.prototype.postPersonSymptoms = async function(body) {
         try {
             console.log('idh agya atleast');

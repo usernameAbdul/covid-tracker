@@ -1,17 +1,31 @@
 {
-  "db": {
-    "name": "db",
-    "connector": "memory"
-  },
-  "covid-tracker": {
-    "host": "",
-    "port": 27017,
-    "url": "mongodb+srv://covid-tracker-db-user:Newyork2020!@cluster0-su83o.mongodb.net/test?retryWrites=true&w=majority",
-    "database": "covid-tracker",
-    "password": "Newyork2020!",
-    "name": "covid-tracker",
-    "user": "covid-tracker-db-user",
-    "useNewUrlParser": true,
-    "connector": "mongodb"
-  }
+    "db": {
+        "name": "db",
+        "connector": "memory"
+    },
+    "covid-tracker": {
+        "host": "",
+        "port": 27017,
+        "url": "mongodb+srv://covid-tracker-db-user:Newyork2020!@cluster0-su83o.mongodb.net/test?retryWrites=true&w=majority",
+        "database": "covid-tracker",
+        "password": "Newyork2020!",
+        "name": "covid-tracker",
+        "user": "covid-tracker-db-user",
+        "useNewUrlParser": true,
+        "connector": "mongodb"
+    },
+    "Email": {
+        "connector": "mail",
+        "transports": [{
+            "type": "smtp",
+            "host": "email-smtp.us-east-1.amazonaws.com",
+            "secure": true,
+            "port": 465,
+
+            "auth": {
+                "user": "AKIAQO57I5SJYDSSZ672",
+                "pass": "BLUkeTPz0cN1OK8DdnFJWJLQgbTX8fJ5zWwuH9t0Qtqs"
+            }
+        }]
+    }
 }
