@@ -22,7 +22,7 @@
     "loopback-component-explorer": "^6.2.0",
     "loopback-connector-mongodb": "^5.2.3",
     "loopback-ds-timestamp-mixin": "^3.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongod": "^2.0.0",
     "node-cron": "^2.0.3",
     "promise": "^8.1.0",
